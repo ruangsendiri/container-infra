@@ -7,7 +7,7 @@ elk is a docker compose file for dealing with elasticsearch world (logstash, ela
 Just clone this repo.
 
 ```bash
-git clone https://github.com/ruangsendiri/elk.git
+git clone -b elk https://github.com/ruangsendiri/container-infra.git
 ```
 
 ## Usage
