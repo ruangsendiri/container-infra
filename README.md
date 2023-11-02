@@ -25,7 +25,7 @@ docker logs elasticsearch
 docker logs logstash
 
 # check elasticsearch health
-curl -i -X GET "http://10.1.30.93:9200/_cluster/health?pretty"
+curl -i -X GET "http://127.0.0.1:9200/_cluster/health?pretty"
 ```
 
 ## Contributing
