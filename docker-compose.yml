@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - backend
+    restart: unless-stopped
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.17.13
+    ports:
+      - 5601:5601
+    networks:
+      - backend
+    depends_on:
+      elasticsearch:
+        condition: service_started
+    restart: on-failure
+
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:7.17.13
+    ports:
+      - 5000:5000
+    networks:
+      - backend
+    volumes:
+      - "${PWD}/logstash.conf:/usr/share/logstash/pipeline/logstash.conf"
+      - "${PWD}/logstash.yml:/usr/share/logstash/config/logstash.yml"
+    depends_on:
+      elasticsearch:
+        condition: service_started
+    restart: on-failure
+
+volumes:
+  elasticsearch-data:
+    driver: local
+
+networks:
+  backend:
